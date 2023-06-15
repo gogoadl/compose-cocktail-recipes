@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface CocktailService {
-    @GET
+    @GET("search.php")
     suspend fun fetchCocktailList(
         @Query("s") s: String = "s"
     ): Cocktail
