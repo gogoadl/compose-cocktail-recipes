@@ -1,8 +1,10 @@
 package com.hyeonwoo.compose_cocktail_recipes.ui
 
+import LoadingAnimation
 import android.content.Context
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,8 +23,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -33,10 +39,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.hyeonwoo.compose_cocktail_recipes.R
 import com.hyeonwoo.compose_cocktail_recipes.model.Cocktail
 import com.hyeonwoo.compose_cocktail_recipes.ui.theme.ComposecocktailrecipesTheme
 import kotlinx.coroutines.flow.flatMapLatest
+import java.lang.StrictMath.min
 
 
 @Composable
@@ -68,10 +79,10 @@ fun Cards(
         if (!cocktails.drinks.isNullOrEmpty()) {
             cocktails.drinks.let {
                 items(it.size) { index ->
-                    val drink = it.get(index)
+                    val drink = it[index]
                     ImageCard(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                        contentDescription = drink!!.strDrink ?: "description",
+                        imageUrl = drink!!.strDrinkThumb ?: "",
+                        contentDescription = drink.strDrink ?: "description",
                         title = drink.strDrink ?: "title",
                         modifier = Modifier
                             .clickable {
@@ -88,32 +99,53 @@ fun Cards(
 
 @Composable
 fun ImageCard(
-    painter: Painter,
+    imageUrl: String,
     contentDescription: String,
     title: String,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(15.dp)
+        shape = RoundedCornerShape(15.dp),
     ) {
-        Box(modifier = modifier.height(200.dp)) {
+        Box(modifier = modifier.size(200.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            val painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageUrl)
+                    .crossfade(true)
+                    .build())
+            val state = painter.state
+
+            val transition by animateFloatAsState(
+                targetValue = if (state is AsyncImagePainter.State.Success) 1f else 0f
+            )
+            if (state is AsyncImagePainter.State.Loading) {
+                LoadingAnimation()
+            }
             Image(
                 painter = painter,
                 contentDescription = contentDescription,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .alpha(transition)
+                    .scale(.8f + (.2f * transition))
+                    .alpha(min(1f, transition / .2f))
+                    .align(Alignment.Center)
             )
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Black,
-                        ),
-                        startY = 300f
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black,
+                            ),
+                            startY = 300f
+                        )
                     )
-                ))
+            )
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -122,6 +154,7 @@ fun ImageCard(
             ) {
                 Text(title, style = TextStyle(color = Color.White, fontSize = 16.sp))
             }
+
         }
     }
 }
