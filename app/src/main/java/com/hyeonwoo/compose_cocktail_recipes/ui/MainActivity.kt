@@ -37,7 +37,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewmoel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -47,94 +46,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Main()
+                    MainScreen()
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Main() {
-    Cards()
-}
-
-@Composable
-fun Cards(
-    names: List<String> = (1..100).map { it.toString() },
-    context: Context = LocalContext.current.applicationContext
-) {
-    LazyVerticalGrid(
-        contentPadding = PaddingValues(
-            start = 12.dp,
-            top = 16.dp,
-            end = 12.dp,
-            bottom = 16.dp
-        ),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        columns = GridCells.Adaptive(128.dp)
-    )
-    {
-        items(names) {
-            name -> ImageCard(
-            painter = painterResource(id = com.hyeonwoo.compose_cocktail_recipes.R.drawable.ic_launcher_foreground),
-            contentDescription = "test desc",
-            title = "title of cocktail",
-            modifier = Modifier
-            .clickable {
-                Toast
-                    .makeText(context, "Click", Toast.LENGTH_SHORT)
-                    .show()
-            })
-        }
-    }
-}
-
-@Composable
-fun ImageCard(
-    painter: Painter,
-    contentDescription: String,
-    title: String,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(15.dp)
-    ) {
-        Box(modifier = modifier.height(200.dp)) {
-            Image(
-                painter = painter,
-                contentDescription = contentDescription,
-                contentScale = ContentScale.Crop
-            )
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Black,
-                        ),
-                        startY = 300f
-                    )
-                ))
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp),
-                contentAlignment = Alignment.BottomStart
-            ) {
-                Text(title, style = TextStyle(color = Color.White, fontSize = 16.sp))
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun DefaultPreview() {
-    ComposecocktailrecipesTheme {
-        Main()
     }
 }
