@@ -79,4 +79,8 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
     implementation "androidx.hilt:hilt-navigation-compose:$compose_hilt_version"
+
+    implementation "androidx.palette:palette:$palette_version"
+
+    implementation "com.jakewharton.timber:timber:$timber_version"
 }
