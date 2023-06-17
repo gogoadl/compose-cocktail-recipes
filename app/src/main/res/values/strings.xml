@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">compose-cocktail-recipes</string>
+    <string name="default_cocktail">cocktail</string>
+    <string name="default_description">description</string>
+    <string name="default_glass">Glass</string>
+    <string name="default_ingredients">Ingredients</string>
+    <string name="default_ingredient">ingredient</string>
+    <string name="default_measures">measures</string>
+    <string name="serve_on">Serve on</string>
 </resources>
