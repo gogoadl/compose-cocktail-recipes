@@ -3,7 +3,7 @@
 compose-cocktail-recipes demonstrates modern Android development with Jetpack (Compose, ViewModel), Flow, Hilt, Coil, Retrofit
 based on MVVM architecture.
 
-I was inspired by developer skydoves's project Pokedex.
+I was inspired by developer [skydoves](https://github.com/skydoves)'s project [Pokedex](https://github.com/skydoves/Pokedex).
 
 
 ## Tech stacks & libraries
