@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -38,13 +39,20 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.hyeonwoo.compose_cocktail_recipes.R
 import com.hyeonwoo.compose_cocktail_recipes.model.Cocktail
+import com.hyeonwoo.compose_cocktail_recipes.ui.detail.CocktailDetails
 import com.hyeonwoo.compose_cocktail_recipes.ui.theme.ComposecocktailrecipesTheme
 import kotlinx.coroutines.flow.flatMapLatest
 import java.lang.StrictMath.min
@@ -55,13 +63,40 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     mainViewModel: MainViewModel = viewModel()
 ) {
+    val navController = rememberNavController()
     val cocktails = mainViewModel.cocktailState.collectAsState().value
-    Cards(cocktails = cocktails)
+//
+
+    NavHost(navController = navController, startDestination = NavScreen.Home.route) {
+        composable(
+            route = NavScreen.Home.route
+        ) {
+            Cards(
+                cocktails = cocktails,
+                selectCocktail = {
+                    navController.navigate("${NavScreen.CocktailDetails.route}/$it")
+                })
+        }
+        composable(
+            route = NavScreen.CocktailDetails.routeWithArgument,
+            arguments = listOf(
+                navArgument(NavScreen.CocktailDetails.argument0) { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val cocktailId =
+                backStackEntry.arguments?.getString(NavScreen.CocktailDetails.argument0) ?: return@composable
+
+            CocktailDetails(cocktailId = cocktailId, viewModel = hiltViewModel()) {
+                navController.navigateUp()
+            }
+        }
+    }
 }
 
 @Composable
 fun Cards(
     cocktails: Cocktail,
+    selectCocktail: (String) -> Unit,
     context: Context = LocalContext.current.applicationContext
 ) {
     LazyVerticalGrid(
@@ -85,11 +120,8 @@ fun Cards(
                         contentDescription = drink.strDrink ?: "description",
                         title = drink.strDrink ?: "title",
                         modifier = Modifier
-                            .clickable {
-                                Toast
-                                    .makeText(context, "Click", Toast.LENGTH_SHORT)
-                                    .show()
-                            })
+                            .clickable(onClick = { selectCocktail(drink.idDrink!!) })
+                    )
                 }
             }
         }
@@ -156,6 +188,18 @@ fun ImageCard(
             }
 
         }
+    }
+}
+
+sealed class NavScreen(val route: String) {
+
+    object Home : NavScreen("Home")
+
+    object CocktailDetails : NavScreen("CocktailDetails") {
+
+        const val routeWithArgument: String = "CocktailDetails/{cocktailId}"
+
+        const val argument0: String = "cocktailId"
     }
 }
 
