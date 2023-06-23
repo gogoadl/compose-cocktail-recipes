@@ -156,29 +156,48 @@ fun Cards(
     selectCocktail: (String) -> Unit,
     context: Context = LocalContext.current.applicationContext
 ) {
-    LazyVerticalGrid(
-        contentPadding = PaddingValues(
-            start = 12.dp,
-            top = 16.dp,
-            end = 12.dp,
-            bottom = 16.dp
-        ),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        columns = GridCells.Adaptive(128.dp)
-    )
-    {
-        if (!cocktails.drinks.isNullOrEmpty()) {
-            cocktails.drinks.let {
-                items(it.size) { index ->
-                    val drink = it[index]
-                    ImageCard(
-                        imageUrl = drink!!.strDrinkThumb ?: "",
-                        contentDescription = drink.strDrink ?: "description",
-                        title = drink.strDrink ?: "title",
+    if (!cocktails.drinks.isNullOrEmpty()) {
+        cocktails.drinks.let {
+            val isSingleItem = it.size == 1
+
+            if (isSingleItem) {
+                val drink = it.first()
+                Box(modifier = Modifier.fillMaxSize().clickable(onClick = {
+                    Timber.d("click single item!")
+                    selectCocktail(drink?.idDrink!!)
+                }),
+                    contentAlignment = Center) {
+                    SingleImageCard(
+                        imageUrl = drink?.strDrinkThumb ?: "",
+                        contentDescription = drink?.strDrink ?: "description",
+                        title = drink?.strDrink ?: "title",
                         modifier = Modifier
-                            .clickable(onClick = { selectCocktail(drink.idDrink!!) })
+                            .fillMaxSize()
                     )
+                }
+
+            } else {
+                LazyVerticalGrid(
+                    contentPadding = PaddingValues(
+                        start = 12.dp,
+                        top = 16.dp,
+                        end = 12.dp,
+                        bottom = 16.dp
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    columns = GridCells.Adaptive(128.dp)
+                ) {
+                    items(it.size) { index ->
+                        val drink = it[index]
+                        ImageCard(
+                            imageUrl = drink!!.strDrinkThumb ?: "",
+                            contentDescription = drink.strDrink ?: "description",
+                            title = drink.strDrink ?: "title",
+                            modifier = Modifier
+                                .clickable(onClick = { selectCocktail(drink.idDrink!!) })
+                        )
+                    }
                 }
             }
         }
