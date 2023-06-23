@@ -86,6 +86,7 @@ import com.hyeonwoo.compose_cocktail_recipes.model.Drink
 import com.hyeonwoo.compose_cocktail_recipes.ui.detail.CocktailDetails
 import com.hyeonwoo.compose_cocktail_recipes.ui.theme.ComposecocktailrecipesTheme
 import kotlinx.coroutines.flow.flatMapLatest
+import timber.log.Timber
 import java.lang.StrictMath.min
 
 
