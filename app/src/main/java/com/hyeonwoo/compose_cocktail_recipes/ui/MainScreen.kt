@@ -93,7 +93,6 @@ import timber.log.Timber
 import java.lang.StrictMath.min
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Main() {
     MainScreen()
@@ -127,7 +126,7 @@ fun MainScreen(
                         },
                         placeholder = { Text(stringResource(id = R.string.search_hint)) },
                         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth().padding(10.dp)
                     ) {}
                     Cards(
                         cocktails = cocktails,
