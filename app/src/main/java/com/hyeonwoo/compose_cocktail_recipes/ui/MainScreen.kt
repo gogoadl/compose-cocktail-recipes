@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -65,6 +66,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -84,6 +86,7 @@ import com.hyeonwoo.compose_cocktail_recipes.R
 import com.hyeonwoo.compose_cocktail_recipes.model.Cocktail
 import com.hyeonwoo.compose_cocktail_recipes.model.Drink
 import com.hyeonwoo.compose_cocktail_recipes.ui.detail.CocktailDetails
+import com.hyeonwoo.compose_cocktail_recipes.ui.state.SearchState
 import com.hyeonwoo.compose_cocktail_recipes.ui.theme.ComposecocktailrecipesTheme
 import kotlinx.coroutines.flow.flatMapLatest
 import timber.log.Timber
@@ -128,6 +131,7 @@ fun MainScreen(
                     ) {}
                     Cards(
                         cocktails = cocktails,
+                        searchState = searchState,
                         selectCocktail = {
                             navController.navigate("${NavScreen.CocktailDetails.route}/$it")
                     })
@@ -152,6 +156,7 @@ fun MainScreen(
 @Composable
 fun Cards(
     cocktails: Cocktail,
+    searchState: SearchState,
     selectCocktail: (String) -> Unit,
     context: Context = LocalContext.current.applicationContext
 ) {
@@ -161,10 +166,12 @@ fun Cards(
 
             if (isSingleItem) {
                 val drink = it.first()
-                Box(modifier = Modifier.fillMaxSize().clickable(onClick = {
-                    Timber.d("click single item!")
-                    selectCocktail(drink?.idDrink!!)
-                }),
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(onClick = {
+                        Timber.d("click single item!")
+                        selectCocktail(drink?.idDrink!!)
+                    }),
                     contentAlignment = Center) {
                     SingleImageCard(
                         imageUrl = drink?.strDrinkThumb ?: "",
@@ -200,6 +207,18 @@ fun Cards(
                 }
             }
         }
+    } else {
+        Column(modifier = Modifier.fillMaxSize().padding(top = 100.dp),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Row() {
+                Text(text = stringResource(id = R.string.no_result),
+                    fontSize = 20.sp)
+                Text(text = "\"${searchState.currentCocktailText}\"",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp)
+            }
+        }
+
     }
 }
 

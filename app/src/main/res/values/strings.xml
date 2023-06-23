@@ -8,4 +8,5 @@
     <string name="default_measures">measures</string>
     <string name="serve_on">Serve on</string>
     <string name="search_hint">Search for a Cocktail..</string>
+    <string name="no_result">No results for  </string>
 </resources>
