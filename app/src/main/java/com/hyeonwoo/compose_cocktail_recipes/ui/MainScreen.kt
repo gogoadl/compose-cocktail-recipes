@@ -169,7 +169,6 @@ fun Cards(
                 Box(modifier = Modifier
                     .fillMaxSize()
                     .clickable(onClick = {
-                        Timber.d("click single item!")
                         selectCocktail(drink?.idDrink!!)
                     }),
                     contentAlignment = Center) {
