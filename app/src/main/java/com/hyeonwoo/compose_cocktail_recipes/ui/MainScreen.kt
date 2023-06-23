@@ -105,7 +105,6 @@ fun MainScreen(
     val navController = rememberNavController()
     val cocktails = mainViewModel.cocktailState.collectAsState(initial = Cocktail(emptyList<Drink?>())).value
     val searchState by mainViewModel.searchState.collectAsState()
-
     NavHost(navController = navController, startDestination = NavScreen.Home.route) {
         composable(
             route = NavScreen.Home.route
@@ -150,7 +149,6 @@ fun MainScreen(
         }
     }
 }
-
 @Composable
 fun Cards(
     cocktails: Cocktail,
@@ -202,10 +200,6 @@ fun Cards(
                 }
             }
         }
-
-    }
-}
-
     }
 }
 

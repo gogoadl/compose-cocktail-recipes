@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hyeonwoo.compose_cocktail_recipes.model.Cocktail
+import com.hyeonwoo.compose_cocktail_recipes.model.Drink
 import com.hyeonwoo.compose_cocktail_recipes.network.repository.CocktailRepository
 import com.hyeonwoo.compose_cocktail_recipes.ui.state.SearchState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,13 +31,14 @@ class MainViewModel @Inject constructor(
     private val _searchState = MutableStateFlow(SearchState())
     val searchState: StateFlow<SearchState> = _searchState.asStateFlow()
 
-    private val _cocktailState = MutableStateFlow<Cocktail>(Cocktail(listOf()))
-
     @OptIn(ExperimentalCoroutinesApi::class)
     val cocktailState = searchState.flatMapLatest {
-        cocktailRepository.getCocktails(it.currentCocktailText)
+        if (it.currentCocktailText.isEmpty())
+            cocktailRepository.getRandomCocktail()
+        else
+            cocktailRepository.getCocktails(it.currentCocktailText)
     }
-    
+
     fun updateSearchText(searchText: String) {
         Timber.i("searchText : $searchText")
         _searchState.update {
