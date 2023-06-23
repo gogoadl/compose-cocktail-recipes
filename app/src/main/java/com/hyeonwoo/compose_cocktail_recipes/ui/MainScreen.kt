@@ -10,36 +10,48 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
@@ -50,10 +62,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.isContainer
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -67,6 +82,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.hyeonwoo.compose_cocktail_recipes.R
 import com.hyeonwoo.compose_cocktail_recipes.model.Cocktail
+import com.hyeonwoo.compose_cocktail_recipes.model.Drink
 import com.hyeonwoo.compose_cocktail_recipes.ui.detail.CocktailDetails
 import com.hyeonwoo.compose_cocktail_recipes.ui.theme.ComposecocktailrecipesTheme
 import kotlinx.coroutines.flow.flatMapLatest
@@ -76,55 +92,47 @@ import java.lang.StrictMath.min
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Main() {
-    var expanded by remember { mutableStateOf(false) }
-    var textState by remember { mutableStateOf("") }
-    Scaffold(topBar = {
-        TopAppBar(
-            title = { Text(text = stringResource(R.string.app_name))},
-            actions = {
-                IconButton(onClick = { expanded = !expanded }) {
-                    if (expanded)
-                    TextField(
-                        value = textState,
-                        onValueChange = { },
-                    )
-                    Icon(
-                        contentDescription = "Search",
-                        imageVector = Icons.Default.Search,
-                        modifier = Modifier.padding(end = 10.dp),
-                    )
-                }
-            })
-    }) {
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            MainScreen()
-        }
-    }
+    MainScreen()
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel = viewModel()
+    mainViewModel: MainViewModel = viewModel(),
 ) {
     val navController = rememberNavController()
-    val cocktails = mainViewModel.cocktailState.collectAsState().value
-//
+    val cocktails = mainViewModel.cocktailState.collectAsState(initial = Cocktail(emptyList<Drink?>())).value
+    val searchState by mainViewModel.searchState.collectAsState()
 
     NavHost(navController = navController, startDestination = NavScreen.Home.route) {
         composable(
             route = NavScreen.Home.route
         ) {
-            Cards(
-                cocktails = cocktails,
-                selectCocktail = {
-                    navController.navigate("${NavScreen.CocktailDetails.route}/$it")
-                })
+            Scaffold(topBar = {
+                TopAppBar(title = { Text(text = stringResource(id = R.string.app_name) )})
+                }
+            ) {
+                Column(modifier = Modifier.padding(it)) {
+                    SearchBar(
+                        query = searchState.currentCocktailText,
+                        onQueryChange = { mainViewModel.updateSearchText(it) },
+                        onSearch = { mainViewModel.updateSearchActive(false) },
+                        active = searchState.isActive,
+                        onActiveChange = {
+                            mainViewModel.updateSearchActive(it)
+                        },
+                        placeholder = { Text(stringResource(id = R.string.search_hint)) },
+                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {}
+                    Cards(
+                        cocktails = cocktails,
+                        selectCocktail = {
+                            navController.navigate("${NavScreen.CocktailDetails.route}/$it")
+                    })
+                }
+            }
         }
         composable(
             route = NavScreen.CocktailDetails.routeWithArgument,
@@ -252,51 +260,10 @@ sealed class NavScreen(val route: String) {
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MainPreview() {
-    var expanded by remember { mutableStateOf(false) }
-    var textState by remember { mutableStateOf("") }
-    Scaffold(topBar = {
-        TopAppBar(
-            title = { Text(text = stringResource(R.string.app_name))},
-            actions = {
-                IconButton(onClick = { expanded = !expanded }) {
-                    if (expanded)
-                        TextField(
-                            value = textState,
-                            onValueChange = { },
-                        )
-                    Icon(
-                        contentDescription = "Search",
-                        imageVector = Icons.Default.Search,
-                        modifier = Modifier.padding(end = 10.dp),
-                    )
-                }
-            })
-    }) {
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
-            color = MaterialTheme.colorScheme.background
-        ) {
-        }
-    }
-}
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun DefaultMainPreview() {
+fun DefaultPreview() {
     ComposecocktailrecipesTheme {
-        MainPreview()
+//        MainScreen()
     }
 }
-
-//@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-//@Composable
-//fun DefaultPreview() {
-//    ComposecocktailrecipesTheme {
-//        MainScreen()
-//    }
-//}

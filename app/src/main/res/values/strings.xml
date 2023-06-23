@@ -7,4 +7,5 @@
     <string name="default_ingredient">ingredient</string>
     <string name="default_measures">measures</string>
     <string name="serve_on">Serve on</string>
+    <string name="search_hint">Search for a Cocktail..</string>
 </resources>
