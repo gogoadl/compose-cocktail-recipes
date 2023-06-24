@@ -213,7 +213,8 @@ private fun PosterDetailsBody(
                 items(tags) {
                     Chip(
                         name = it,
-                        isSelected = false
+                        isSelected = false,
+                        parsedColor = parsedColor
                     )
                 }
             }
@@ -243,7 +244,6 @@ private fun PosterDetailsBody(
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(start = 20.dp)
                 .padding(20.dp),
             color = PaletteGenerator.fromHex(parsedColor.lightMutedSwatchBody)
         )
@@ -266,7 +266,8 @@ private fun PosterDetailsBody(
                 val ingredient = ingredients.getOrNull(i)
                 val measure = measures.getOrNull(i)
                 Text(text = ingredient ?: stringResource(id = R.string.default_ingredient),
-                    color = PaletteGenerator.fromHex(parsedColor.lightVibrantSwatchBody))
+                    color = PaletteGenerator.fromHex(parsedColor.lightVibrantSwatchBody),
+                    modifier = Modifier.padding(end = 10.dp))
                 Text(text = measure ?: stringResource(id = R.string.default_measures),
                     color = PaletteGenerator.fromHex(parsedColor.mutedSwatchBody))
 
@@ -278,7 +279,6 @@ private fun PosterDetailsBody(
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(start = 20.dp)
                 .padding(20.dp),
             color = (PaletteGenerator.fromHex(parsedColor.lightVibrantSwatch))
         )

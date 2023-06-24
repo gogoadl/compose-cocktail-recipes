@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hyeonwoo.compose_cocktail_recipes.util.PaletteGenerator
+import com.hyeonwoo.compose_cocktail_recipes.util.ParsedColor
 
 @Preview(showBackground = true)
 @Composable
@@ -18,11 +20,12 @@ fun Chip(
     name: String = "Chip",
     isSelected: Boolean = false,
     onSelectionChanged: (String) -> Unit = {},
+    parsedColor: ParsedColor = ParsedColor()
 ) {
     Surface(
         modifier = Modifier.padding(4.dp),
         shape = MaterialTheme.shapes.medium,
-        color = if (isSelected) Color.LightGray else MaterialTheme.colorScheme.primary
+        color = if (isSelected) PaletteGenerator.fromHex(parsedColor.mutedSwatch) else PaletteGenerator.fromHex(parsedColor.lightMutedSwatch)
     ) {
         Row(modifier = Modifier
             .toggleable(
@@ -35,7 +38,7 @@ fun Chip(
             Text(
                 text = name,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White,
+                color = PaletteGenerator.fromHex(parsedColor.mutedSwatchBody),
                 modifier = Modifier.padding(8.dp)
             )
         }
