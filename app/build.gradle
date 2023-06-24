@@ -83,4 +83,6 @@ dependencies {
     implementation "androidx.palette:palette:$palette_version"
 
     implementation "com.jakewharton.timber:timber:$timber_version"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+
 }

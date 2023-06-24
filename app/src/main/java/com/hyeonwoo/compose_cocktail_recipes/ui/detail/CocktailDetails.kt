@@ -7,6 +7,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,12 +35,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -52,6 +55,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -67,6 +71,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ErrorResult
 import coil.request.SuccessResult
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hyeonwoo.compose_cocktail_recipes.R
 import com.hyeonwoo.compose_cocktail_recipes.model.Cocktail
 import com.hyeonwoo.compose_cocktail_recipes.model.Drink
@@ -87,6 +92,11 @@ fun CocktailDetails(
     viewModel: DetailViewModel,
     pressOnBack: () -> Unit
 ) {
+    // Remember a SystemUiController
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = !isSystemInDarkTheme()
+    val defaultSystemBarColor = Color(colorScheme.primary.toArgb())
+
     val context = LocalContext.current
 
     var parsedColor by remember {
@@ -128,6 +138,23 @@ fun CocktailDetails(
         }
 
         Timber.d("parsed Colors : ${parsedColor.toString()}")
+    }
+
+    DisposableEffect(parsedColor, useDarkIcons) {
+        // Update all of the system bar colors to be transparent, and use
+        // dark icons if we're in light theme
+        systemUiController.setSystemBarsColor(
+            color = PaletteGenerator.fromHex(parsedColor.vibrantSwatch),
+            darkIcons = useDarkIcons
+        )
+
+        // setStatusBarColor() and setNavigationBarColor() also exist
+        onDispose {
+            systemUiController.setSystemBarsColor(
+                color = defaultSystemBarColor,
+                darkIcons = useDarkIcons
+            )
+        }
     }
     BackHandler(onBack = pressOnBack)
 
