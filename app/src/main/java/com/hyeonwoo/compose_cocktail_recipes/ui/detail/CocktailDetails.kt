@@ -134,7 +134,7 @@ fun CocktailDetails(
     Scaffold(topBar = {
         TopAppBar(
             title = { Text(text = drink?.strDrink ?: stringResource(R.string.default_cocktail)) },
-            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = PaletteGenerator.fromHex(parsedColor.darkVibrant)),
+            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = PaletteGenerator.fromHex(parsedColor.vibrantSwatch)),
             navigationIcon = {
                 IconButton(onClick = pressOnBack) {
                     Icon(
@@ -165,7 +165,7 @@ private fun PosterDetailsBody(
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
-            .background(PaletteGenerator.fromHex(parsedColor.darkVibrant))
+            .background(PaletteGenerator.fromHex(parsedColor.vibrantSwatch))
             .fillMaxHeight()
     ) {
 
@@ -199,7 +199,7 @@ private fun PosterDetailsBody(
             modifier = Modifier
                 .align(CenterHorizontally)
                 .padding(20.dp),
-            color = PaletteGenerator.fromHex(parsedColor.lightVibrant)
+            color = PaletteGenerator.fromHex(parsedColor.vibrantSwatchBody)
         )
 
         Text(
@@ -209,7 +209,7 @@ private fun PosterDetailsBody(
             modifier = Modifier
                 .align(CenterHorizontally)
                 .padding(20.dp),
-            color = PaletteGenerator.fromHex(parsedColor.lightMuted)
+            color = PaletteGenerator.fromHex(parsedColor.mutedSwatchBody)
         )
         Text(
             text = stringResource(id = R.string.default_ingredients),
@@ -218,7 +218,7 @@ private fun PosterDetailsBody(
             modifier = Modifier
                 .padding(start = 20.dp)
                 .padding(20.dp),
-            color = PaletteGenerator.fromHex(parsedColor.darkMuted)
+            color = PaletteGenerator.fromHex(parsedColor.lightMutedSwatchBody)
         )
         val ingredients: List<String?> = with(drink) {
             listOf(strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5,
@@ -239,9 +239,9 @@ private fun PosterDetailsBody(
                 val ingredient = ingredients.getOrNull(i)
                 val measure = measures.getOrNull(i)
                 Text(text = ingredient ?: stringResource(id = R.string.default_ingredient),
-                    color = PaletteGenerator.fromHex(parsedColor.muted))
+                    color = PaletteGenerator.fromHex(parsedColor.lightVibrantSwatchBody))
                 Text(text = measure ?: stringResource(id = R.string.default_measures),
-                    color = PaletteGenerator.fromHex(parsedColor.darkMuted))
+                    color = PaletteGenerator.fromHex(parsedColor.mutedSwatchBody))
 
             }
         }
@@ -253,7 +253,7 @@ private fun PosterDetailsBody(
             modifier = Modifier
                 .padding(start = 20.dp)
                 .padding(20.dp),
-            color = (PaletteGenerator.fromHex(parsedColor.vibrant))
+            color = (PaletteGenerator.fromHex(parsedColor.lightVibrantSwatch))
         )
 
         Row(modifier = Modifier
