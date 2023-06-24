@@ -24,30 +24,34 @@ object PaletteGenerator {
 
     fun extractColorsFromBitmapToParsedColors(bitmap: Bitmap): ParsedColor {
         return ParsedColor(
-            vibrant = parseColorSwatch(color = Palette.from(bitmap).generate().vibrantSwatch),
-            lightVibrant = parseColorSwatch(
+            vibrantSwatch = parseColorSwatch(color = Palette.from(bitmap).generate().vibrantSwatch),
+            lightVibrantSwatch = parseColorSwatch(
                 color = Palette.from(bitmap)
                     .generate().lightVibrantSwatch
             ),
-            darkVibrant = parseColorSwatch(
+            lightMutedSwatch = parseColorSwatch(
                 color = Palette.from(bitmap)
-                    .generate().darkVibrantSwatch
+                    .generate().lightMutedSwatch
             ),
-            muted = parseColorSwatch(
+            mutedSwatch = parseColorSwatch(
                 color = Palette.from(bitmap)
                     .generate().mutedSwatch
             ),
-            onDarkVibrant = parseBodyColor(
+            vibrantSwatchBody = parseBodyColor(
                 color = Palette.from(bitmap)
-                    .generate().darkVibrantSwatch?.bodyTextColor
+                    .generate().vibrantSwatch?.bodyTextColor
             ),
-            lightMuted = parseBodyColor(
+            lightVibrantSwatchBody = parseBodyColor(
+                color = Palette.from(bitmap)
+                    .generate().lightVibrantSwatch?.bodyTextColor
+            ),
+            lightMutedSwatchBody = parseBodyColor(
                 color = Palette.from(bitmap)
                     .generate().lightMutedSwatch?.bodyTextColor
             ),
-            darkMuted = parseBodyColor(
+            mutedSwatchBody = parseBodyColor(
                 color = Palette.from(bitmap)
-                    .generate().darkMutedSwatch?.bodyTextColor
+                    .generate().mutedSwatch?.bodyTextColor
             )
         )
 
