@@ -63,6 +63,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.palette.graphics.Palette
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ErrorResult
 import coil.request.SuccessResult
@@ -94,7 +95,7 @@ fun CocktailDetails(
     }
     val drink: Drink? = viewModel.cocktailDetailsFlow.collectAsState(initial = null).value?.drinks?.get(0)
 
-    val painter = rememberImagePainter(data = drink?.strDrinkThumb)
+    val painter = rememberAsyncImagePainter(model = drink?.strDrinkThumb)
     var imageResult by remember {
         mutableStateOf<RequestStatus>(RequestStatus.Loading)
     }
