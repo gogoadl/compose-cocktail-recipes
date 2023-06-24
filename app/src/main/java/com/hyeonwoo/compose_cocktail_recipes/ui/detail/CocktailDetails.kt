@@ -271,31 +271,3 @@ private fun PosterDetailsBody(
         }
     }
 }
-
-@Composable
-private fun ColorPalettes(
-    palette: Palette?,
-    modifier: Modifier
-) {
-
-    val colorList: List<Int> = palette.paletteColorList()
-    LazyRow(
-        modifier = modifier
-            .padding(horizontal = 8.dp, vertical = 16.dp)
-    ) {
-        items(colorList) { color ->
-            Crossfade(
-                targetState = color,
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .size(45.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .background(color = Color(it))
-                        .fillMaxSize()
-                )
-            }
-        }
-    }
-}
