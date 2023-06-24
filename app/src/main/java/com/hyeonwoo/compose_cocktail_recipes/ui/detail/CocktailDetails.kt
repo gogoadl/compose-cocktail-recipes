@@ -68,7 +68,6 @@ import coil.compose.rememberImagePainter
 import coil.request.ErrorResult
 import coil.request.SuccessResult
 import com.hyeonwoo.compose_cocktail_recipes.R
-import com.hyeonwoo.compose_cocktail_recipes.extensions.paletteColorList
 import com.hyeonwoo.compose_cocktail_recipes.model.Cocktail
 import com.hyeonwoo.compose_cocktail_recipes.model.Drink
 import com.hyeonwoo.compose_cocktail_recipes.ui.Chip
