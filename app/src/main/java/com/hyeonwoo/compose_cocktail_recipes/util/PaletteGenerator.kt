@@ -62,7 +62,7 @@ object PaletteGenerator {
             val parsedColor = Integer.toHexString(color.rgb)
             return "#$parsedColor"
         } else {
-            "#000000"
+            "#FFFFFF"
         }
     }
 
@@ -71,7 +71,7 @@ object PaletteGenerator {
             val parsedColor = Integer.toHexString(color)
             return "#$parsedColor"
         } else {
-            "#FFFFFF"
+            "#000000"
         }
     }
 
