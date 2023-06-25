@@ -60,9 +60,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.palette.graphics.Palette
@@ -75,6 +77,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hyeonwoo.compose_cocktail_recipes.R
 import com.hyeonwoo.compose_cocktail_recipes.model.Cocktail
 import com.hyeonwoo.compose_cocktail_recipes.model.Drink
+import com.hyeonwoo.compose_cocktail_recipes.model.DummyDrink
 import com.hyeonwoo.compose_cocktail_recipes.ui.Chip
 import com.hyeonwoo.compose_cocktail_recipes.util.PaletteGenerator
 import com.hyeonwoo.compose_cocktail_recipes.util.ParsedColor
@@ -90,7 +93,7 @@ import timber.log.Timber
 fun CocktailDetails(
     cocktailId: String,
     viewModel: DetailViewModel,
-    pressOnBack: () -> Unit
+    pressOnBack: () -> Unit = { }
 ) {
     // Remember a SystemUiController
     val systemUiController = rememberSystemUiController()
@@ -222,7 +225,7 @@ private fun PosterDetailsBody(
 
         Text(
             text = drink.strDrink ?: stringResource(id = R.string.default_cocktail),
-            fontSize = 30.sp,
+            style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .align(CenterHorizontally)
@@ -232,8 +235,7 @@ private fun PosterDetailsBody(
 
         Text(
             text = drink.strInstructions ?: stringResource(id = R.string.default_description),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
                 .align(CenterHorizontally)
                 .padding(20.dp),
@@ -241,8 +243,7 @@ private fun PosterDetailsBody(
         )
         Text(
             text = stringResource(id = R.string.default_ingredients),
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier
                 .padding(20.dp),
             color = PaletteGenerator.fromHex(parsedColor.lightMutedSwatchBody)
@@ -266,9 +267,11 @@ private fun PosterDetailsBody(
                 val ingredient = ingredients.getOrNull(i)
                 val measure = measures.getOrNull(i)
                 Text(text = ingredient ?: stringResource(id = R.string.default_ingredient),
+                    style = MaterialTheme.typography.titleMedium,
                     color = PaletteGenerator.fromHex(parsedColor.lightVibrantSwatchBody),
                     modifier = Modifier.padding(end = 10.dp))
                 Text(text = measure ?: stringResource(id = R.string.default_measures),
+                    style = MaterialTheme.typography.titleMedium,
                     color = PaletteGenerator.fromHex(parsedColor.mutedSwatchBody))
 
             }
@@ -276,24 +279,24 @@ private fun PosterDetailsBody(
 
         Text(
             text = stringResource(id = R.string.default_glass),
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier
                 .padding(20.dp),
-            color = (PaletteGenerator.fromHex(parsedColor.lightVibrantSwatch))
+            color = (PaletteGenerator.fromHex(parsedColor.lightMutedSwatchBody))
         )
 
         Row(modifier = Modifier
             .padding(start = 20.dp)
             .fillMaxWidth()) {
             Text(
-                text = stringResource(id = R.string.serve_on)
+                text = stringResource(id = R.string.serve_on),
+                style = MaterialTheme.typography.bodyMedium,
             )
             Text(
                 text = drink.strGlass ?: stringResource(id = R.string.default_glass),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.ExtraBold,
-                modifier = Modifier.padding(start = 10.dp)
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(start = 10.dp),
+                fontWeight = FontWeight.Bold
             )
         }
     }
