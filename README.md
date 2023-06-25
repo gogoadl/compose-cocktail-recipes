@@ -12,6 +12,12 @@ I was inspired by developer [skydoves](https://github.com/skydoves)'s project [P
 
 The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 
+
+![녹화_2023_06_25_21_14_12_729](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/0b61ae17-aacf-44a8-9612-2460b0b7735b)
+
+
+
+
 ## Tech stacks & libraries
 
 + MVVM Architecture
