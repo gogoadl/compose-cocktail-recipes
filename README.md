@@ -10,6 +10,7 @@ based on MVVM architecture.
 
 I was inspired by developer [skydoves](https://github.com/skydoves)'s project [Pokedex](https://github.com/skydoves/Pokedex).
 
+The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 
 ## Tech stacks & libraries
 
