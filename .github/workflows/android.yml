@@ -24,7 +24,9 @@ jobs:
       run: ./gradlew build
   
   release:
+    if: contains(github.ref, "release")
     runs-on: ubuntu-latest
+    needs: build
     steps:
     - name: test
       run: echo "hello world" 
