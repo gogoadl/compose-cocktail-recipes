@@ -1,6 +1,6 @@
 # compose-cocktail-recipes
 
-![kotlin icon](https://img.shields.io/badge/kotlin-808080?style=for-the-badge&logo=kotlin&logoColor=7f52ff)
+![Android icon](https://img.shields.io/badge/android-808080?style=for-the-badge&logo=android&logoColor=3ddc84) ![kotlin icon](https://img.shields.io/badge/kotlin-808080?style=for-the-badge&logo=kotlin&logoColor=7f52ff)
 
 compose-cocktail-recipes demonstrates modern Android development with Jetpack (Compose, ViewModel), Flow, Hilt, Coil, Retrofit
 based on MVVM architecture.
