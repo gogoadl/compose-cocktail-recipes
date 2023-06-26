@@ -46,7 +46,7 @@ jobs:
   release:
     needs: version
     
-    if: contains(github.ref, ${{RELEASE_VERSION}})
+    if: contains(github.ref, "v*.*.*")
     runs-on: ubuntu-latest
     steps:
     - name: checkout code
