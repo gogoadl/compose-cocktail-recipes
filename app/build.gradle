@@ -85,3 +85,4 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timber_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
 }
+
