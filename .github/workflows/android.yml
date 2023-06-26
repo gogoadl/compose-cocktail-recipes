@@ -24,10 +24,20 @@ jobs:
         cache: gradle
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
-
-
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: apk
+        path: app/build/outputs/apk/debug/*.apk
+    - name: Upload Release APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: apk
+        path: app/build/outputs/apk/release/*.apk
         
   release:
     permissions:
@@ -59,15 +69,10 @@ jobs:
         gradlePath: app/build.gradle # or app/build.gradle.kts 
         versionCode: ${{github.run_number}}
         versionName: ${{env.RELEASE_VERSION}}
-    - name: Make Gradle executable
-      run: chmod +x ./gradlew
-    - name: Build Release APK
-      run: ./gradlew assembleRelease
-    - name: Upload APK
-      uses: actions/upload-artifact@v3
+    - name: Download APK
+      uses: actions/download-artifact@v1
       with:
         name: apk
-        path: app/build/outputs/apk/release/*.apk
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -85,6 +90,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: app/build/outputs/apk/release/*.apk
+        asset_path: apk/*.apk
         asset_name: Cocktails.apk
         asset_content_type: application/zip   
