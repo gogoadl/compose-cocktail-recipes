@@ -31,8 +31,7 @@ jobs:
         
   release:
     needs: build
-    
-    if: contains(github.ref, "v*.*.*")
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
     - name: checkout code
