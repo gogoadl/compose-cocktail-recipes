@@ -57,7 +57,7 @@ jobs:
       with:
         gradlePath: app/build.gradle # or app/build.gradle.kts 
         versionCode: ${{github.run_number}}
-        versionName: ${{RELEASE_VERSION}}
+        versionName: $RELEASE_VERSION
     - name: Make Gradle executable
       run: chmod +x ./gradlew
     - name: Build Release APK
