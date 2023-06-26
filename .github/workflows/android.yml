@@ -30,6 +30,8 @@ jobs:
 
         
   release:
+    permissions:
+      contents: write
     needs: build
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
