@@ -27,10 +27,7 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
-  apk:
-    name: Generate APK
-    runs-on: ubuntu-latest
-    
+      
   release:
     if: contains(github.ref, 'release')
     runs-on: ubuntu-latest
