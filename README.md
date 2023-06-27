@@ -12,9 +12,7 @@ I was inspired by developer [skydoves](https://github.com/skydoves)'s project [P
 
 The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 
-![video](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/184a8348-fd68-4dca-adc5-01c52e35e50f)
-
-
+![녹화_2023_06_27_17_22_21_409](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/8c11d9e0-0376-49f8-bd4b-d31b6bb7bcca)
 
 
 
