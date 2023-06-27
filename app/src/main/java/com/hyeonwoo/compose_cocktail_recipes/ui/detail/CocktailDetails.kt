@@ -2,9 +2,19 @@ package com.hyeonwoo.compose_cocktail_recipes.ui.detail
 
 import android.graphics.drawable.BitmapDrawable
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -31,6 +41,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,8 +62,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -110,7 +123,17 @@ fun CocktailDetails(
     var imageResult by remember {
         mutableStateOf<RequestStatus>(RequestStatus.Loading)
     }
-
+    var isLoading = true
+    var currentRotation by remember { mutableStateOf(0f) }
+    val rotation = remember { Animatable(currentRotation) }
+    LaunchedEffect(key1 = isLoading) {
+        rotation.animateTo(
+            targetValue = currentRotation + 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1500, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart
+            ))
+    }
     LaunchedEffect(key1 = cocktailId) {
         Timber.d("LaunchedEffect called. key : cocktailId = $cocktailId")
         viewModel.loadCocktailById(cocktailId)
@@ -159,28 +182,44 @@ fun CocktailDetails(
         }
     }
     BackHandler(onBack = pressOnBack)
-
-    Scaffold(topBar = {
-        TopAppBar(
-            title = { Text(text = drink?.strDrink ?: stringResource(R.string.default_cocktail)) },
-            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = PaletteGenerator.fromHex(parsedColor.vibrantSwatch)),
-            navigationIcon = {
-                IconButton(onClick = pressOnBack) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back",
-                    )
-                }
+    if (drink == null) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.align(Center)) {
+                Image(
+                    painter = rememberAsyncImagePainter(model = R.drawable.app_logo2),
+                    contentDescription = "logo",
+                    modifier = Modifier
+                        .rotate(rotation.value)
+                        .size(100.dp)
+                )
+                Text(
+                    text = stringResource(id = R.string.loading),
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.align(CenterHorizontally)
+                )
             }
-        )},
-    ) {
-        Box(modifier = Modifier.padding(it)) {
-            drink?.let {
-                PosterDetailsBody(viewModel, it, parsedColor, pressOnBack)
+        }
+    } else {
+        isLoading = false
+        Scaffold(topBar = {
+            TopAppBar(
+                title = { Text(text = drink.strDrink ?: stringResource(R.string.default_cocktail)) },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = PaletteGenerator.fromHex(parsedColor.vibrantSwatch)),
+                navigationIcon = {
+                    IconButton(onClick = pressOnBack) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back",
+                        )
+                    }
+                }
+            )},
+        ) {
+            Box(modifier = Modifier.padding(it)) {
+                PosterDetailsBody(viewModel, drink, parsedColor, pressOnBack)
             }
         }
     }
-
 }
 
 @Composable
