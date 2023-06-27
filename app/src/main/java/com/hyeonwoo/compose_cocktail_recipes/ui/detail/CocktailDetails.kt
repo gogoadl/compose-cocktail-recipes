@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -58,6 +59,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -85,12 +87,14 @@ import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ErrorResult
 import coil.request.SuccessResult
+import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hyeonwoo.compose_cocktail_recipes.R
 import com.hyeonwoo.compose_cocktail_recipes.model.Cocktail
 import com.hyeonwoo.compose_cocktail_recipes.model.Drink
 import com.hyeonwoo.compose_cocktail_recipes.model.DummyDrink
 import com.hyeonwoo.compose_cocktail_recipes.ui.Chip
+import com.hyeonwoo.compose_cocktail_recipes.ui.NavScreen
 import com.hyeonwoo.compose_cocktail_recipes.util.PaletteGenerator
 import com.hyeonwoo.compose_cocktail_recipes.util.ParsedColor
 import com.hyeonwoo.compose_cocktail_recipes.util.RequestStatus
@@ -98,6 +102,7 @@ import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
+import okhttp3.internal.wait
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,123 +112,59 @@ fun CocktailDetails(
     viewModel: DetailViewModel,
     pressOnBack: () -> Unit = { }
 ) {
-    // Remember a SystemUiController
-    val systemUiController = rememberSystemUiController()
-    val useDarkIcons = !isSystemInDarkTheme()
-    val defaultSystemBarColor = Color(colorScheme.primary.toArgb())
-
-    val context = LocalContext.current
-
-    var parsedColor by remember {
-        mutableStateOf<ParsedColor>(ParsedColor())
-    }
     val drink: Drink? = viewModel.cocktailDetailsFlow.collectAsState(initial = null).value?.drinks?.get(0)
-
-    val painter = rememberAsyncImagePainter(model = drink?.strDrinkThumb)
-    var imageResult by remember {
-        mutableStateOf<RequestStatus>(RequestStatus.Loading)
-    }
     var isLoading = true
-    var currentRotation by remember { mutableStateOf(0f) }
+    var currentRotation by remember { mutableFloatStateOf(0f) }
     val rotation = remember { Animatable(currentRotation) }
-    LaunchedEffect(key1 = isLoading) {
-        rotation.animateTo(
-            targetValue = currentRotation + 360f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(1500, easing = LinearEasing),
-                repeatMode = RepeatMode.Restart
-            ))
-    }
+    val painter = rememberAsyncImagePainter(model = drink?.strDrinkThumb)
+    val parsedColor by remember { mutableStateOf<ParsedColor>(ParsedColor()) }
+
     LaunchedEffect(key1 = cocktailId) {
-        Timber.d("LaunchedEffect called. key : cocktailId = $cocktailId")
         viewModel.loadCocktailById(cocktailId)
     }
-
-    LaunchedEffect(key1 = drink?.strDrinkThumb) {
-        Timber.d("LaunchedEffect called. key : drink?.strDrinkThumb = ${drink?.strDrinkThumb}")
-        imageResult = RequestStatus.Loading
-        val result = PaletteGenerator.convertImageUrlToBitmap(
-            drink?.strDrinkThumb?: "",
-            context
-        )
-        if (result is SuccessResult) {
-            Timber.d("result is success")
-            val bitmap = (result.drawable as BitmapDrawable).bitmap
-            if (bitmap != null) {
-                parsedColor = PaletteGenerator.extractColorsFromBitmapToParsedColors(
-                    bitmap = bitmap
-                )
-            }
-            imageResult = RequestStatus.Success
-        }
-
-        if (result is ErrorResult) {
-            Timber.d("result is Error")
-            imageResult = RequestStatus.Error
-        }
-
-        Timber.d("parsed Colors : ${parsedColor.toString()}")
-    }
-
-    DisposableEffect(parsedColor, useDarkIcons) {
-        // Update all of the system bar colors to be transparent, and use
-        // dark icons if we're in light theme
-        systemUiController.setSystemBarsColor(
-            color = PaletteGenerator.fromHex(parsedColor.vibrantSwatch),
-            darkIcons = useDarkIcons
-        )
-
-        // setStatusBarColor() and setNavigationBarColor() also exist
-        onDispose {
-            systemUiController.setSystemBarsColor(
-                color = defaultSystemBarColor,
-                darkIcons = useDarkIcons
-            )
-        }
-    }
     BackHandler(onBack = pressOnBack)
+    RotationEffect(isLoading, currentRotation, rotation)
+    StatusBarColorChangeEffect(parsedColor)
+    PaletteColorExtractEffect(drink, parsedColor)
+    
     if (drink == null) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.align(Center)) {
-                Image(
-                    painter = rememberAsyncImagePainter(model = R.drawable.app_logo2),
-                    contentDescription = "logo",
-                    modifier = Modifier
-                        .rotate(rotation.value)
-                        .size(100.dp)
-                )
-                Text(
-                    text = stringResource(id = R.string.loading),
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.align(CenterHorizontally)
-                )
-            }
-        }
+        LoadingBox(rotation)
     } else {
         isLoading = false
-        Scaffold(topBar = {
-            TopAppBar(
-                title = { Text(text = drink.strDrink ?: stringResource(R.string.default_cocktail)) },
-                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = PaletteGenerator.fromHex(parsedColor.vibrantSwatch)),
-                navigationIcon = {
-                    IconButton(onClick = pressOnBack) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back",
-                        )
-                    }
+        CocktailDetailsScreen(viewModel, drink, parsedColor, pressOnBack)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CocktailDetailsScreen(
+    viewModel: DetailViewModel,
+    drink: Drink,
+    parsedColor: ParsedColor,
+    pressOnBack: () -> Unit,
+) {
+    Scaffold(topBar = {
+        TopAppBar(
+            title = { Text(text = drink.strDrink ?: stringResource(R.string.default_cocktail)) },
+            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = PaletteGenerator.fromHex(parsedColor.vibrantSwatch)),
+            navigationIcon = {
+                IconButton(onClick = pressOnBack) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Back",
+                    )
                 }
-            )},
-        ) {
-            Box(modifier = Modifier.padding(it)) {
-                PosterDetailsBody(viewModel, drink, parsedColor, pressOnBack)
             }
+        )},
+    ) {
+        Box(modifier = Modifier.padding(it)) {
+            CocktailDetailsBody(viewModel, drink, parsedColor, pressOnBack)
         }
     }
 }
 
 @Composable
-private fun PosterDetailsBody(
+private fun CocktailDetailsBody(
     viewModel: DetailViewModel,
     drink: Drink,
     parsedColor: ParsedColor,
@@ -247,19 +188,7 @@ private fun PosterDetailsBody(
             )
         }
 
-        if (drink.strTags != null) {
-            val tags = drink.strTags.split(",")
-            Timber.d("$tags")
-            LazyRow(modifier = Modifier.padding(12.dp)) {
-                items(tags) {
-                    Chip(
-                        name = it,
-                        isSelected = false,
-                        parsedColor = parsedColor
-                    )
-                }
-            }
-        }
+        Tags(drink = drink, parsedColor = parsedColor)
 
         Text(
             text = drink.strDrink ?: stringResource(id = R.string.default_cocktail),
@@ -279,6 +208,7 @@ private fun PosterDetailsBody(
                 .padding(20.dp),
             color = PaletteGenerator.fromHex(parsedColor.mutedSwatchBody)
         )
+
         Text(
             text = stringResource(id = R.string.default_ingredients),
             style = MaterialTheme.typography.headlineMedium,
@@ -286,18 +216,10 @@ private fun PosterDetailsBody(
                 .padding(20.dp),
             color = PaletteGenerator.fromHex(parsedColor.lightMutedSwatchBody)
         )
-        val ingredients: List<String?> = with(drink) {
-            listOf(strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5,
-                strIngredient6, strIngredient7, strIngredient8, strIngredient9, strIngredient10,
-                strIngredient11, strIngredient12, strIngredient13, strIngredient14, strIngredient15,
-            )
-        }.filterNotNull()
-        val measures: List<String?> = with(drink) {
-            listOf(strMeasure1, strMeasure2, strMeasure3, strMeasure4, strMeasure5,
-                strMeasure6, strMeasure7, strMeasure8, strMeasure9, strMeasure10,
-                strMeasure11, strMeasure12, strMeasure13, strMeasure14, strMeasure15,
-            )
-        }.filterNotNull()
+
+        val ingredients = ingredients(drink)
+        val measures = measures(drink)
+
         for (i in ingredients.indices) {
             Row(modifier = Modifier
                 .padding(start = 20.dp)
@@ -337,5 +259,136 @@ private fun PosterDetailsBody(
                 fontWeight = FontWeight.Bold
             )
         }
+    }
+}
+
+@Composable
+fun LoadingBox(rotation: Animatable<Float, AnimationVector1D>) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.align(Center)) {
+            Image(
+                painter = rememberAsyncImagePainter(model = R.drawable.app_logo2),
+                contentDescription = "logo",
+                modifier = Modifier
+                    .rotate(rotation.value)
+                    .size(100.dp)
+            )
+            Text(
+                text = stringResource(id = R.string.loading),
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.align(CenterHorizontally)
+            )
+        }
+    }
+}
+@Composable
+fun PaletteColorExtractEffect(drink: Drink?, parsedColor: ParsedColor) {
+    val context = LocalContext.current
+    var imageResult by remember {
+        mutableStateOf<RequestStatus>(RequestStatus.Loading)
+    }
+    LaunchedEffect(key1 = drink?.strDrinkThumb) {
+
+        Timber.d("LaunchedEffect called. key : drink?.strDrinkThumb = ${drink?.strDrinkThumb}")
+        imageResult = RequestStatus.Loading
+        val result = PaletteGenerator.convertImageUrlToBitmap(
+            drink?.strDrinkThumb?: "",
+            context
+        )
+        if (result is SuccessResult) {
+            Timber.d("result is success")
+            val bitmap = (result.drawable as BitmapDrawable).bitmap
+            if (bitmap != null) {
+                val color = PaletteGenerator.extractColorsFromBitmapToParsedColors(bitmap = bitmap)
+                parsedColor.copy(
+                    lightMutedSwatch = color.lightMutedSwatch,
+                    lightMutedSwatchBody = color.lightMutedSwatchBody,
+                    lightVibrantSwatch = color.lightVibrantSwatch,
+                    lightVibrantSwatchBody = color.lightVibrantSwatchBody,
+                    mutedSwatch = color.mutedSwatch,
+                    mutedSwatchBody = color.mutedSwatchBody,
+                    vibrantSwatch = color.vibrantSwatch,
+                    vibrantSwatchBody = color.vibrantSwatchBody
+                )
+            }
+            imageResult = RequestStatus.Success
+        }
+
+        if (result is ErrorResult) {
+            Timber.d("result is Error")
+            imageResult = RequestStatus.Error
+        }
+
+        Timber.d("parsed Colors : ${parsedColor.toString()}")
+    }
+
+}
+
+@Composable
+fun RotationEffect(isLoading: Boolean, currentRotation: Float, rotation: Animatable<Float, AnimationVector1D>) {
+    LaunchedEffect(key1 = isLoading) {
+        rotation.animateTo(
+            targetValue = currentRotation + 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1500, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart
+            ))
+    }
+}
+
+@Composable
+fun StatusBarColorChangeEffect(parsedColor: ParsedColor) {
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = !isSystemInDarkTheme()
+    val defaultSystemBarColor = Color(colorScheme.primary.toArgb())
+
+    DisposableEffect(parsedColor, useDarkIcons) {
+        systemUiController.setSystemBarsColor(
+            color = PaletteGenerator.fromHex(parsedColor.vibrantSwatch),
+            darkIcons = useDarkIcons
+        )
+        onDispose {
+            systemUiController.setSystemBarsColor(
+                color = defaultSystemBarColor,
+                darkIcons = useDarkIcons
+            )
+        }
+    }
+}
+
+@Composable
+fun Tags(drink: Drink?, parsedColor: ParsedColor) {
+    if (drink?.strTags != null) {
+        val tags = drink.strTags.split(",")
+
+        LazyRow(modifier = Modifier.padding(12.dp)) {
+            items(tags) {
+                Chip(
+                    name = it,
+                    isSelected = false,
+                    parsedColor = parsedColor
+                )
+            }
+        }
+    }
+}
+
+fun ingredients(drink: Drink): List<String?> {
+    with(drink) {
+        return listOfNotNull(
+            strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5,
+            strIngredient6, strIngredient7, strIngredient8, strIngredient9, strIngredient10,
+            strIngredient11, strIngredient12, strIngredient13, strIngredient14, strIngredient15,
+        )
+    }
+}
+
+fun measures(drink: Drink): List<String?> {
+    with(drink) {
+        return listOfNotNull(
+            strMeasure1, strMeasure2, strMeasure3, strMeasure4, strMeasure5,
+            strMeasure6, strMeasure7, strMeasure8, strMeasure9, strMeasure10,
+            strMeasure11, strMeasure12, strMeasure13, strMeasure14, strMeasure15,
+        )
     }
 }
