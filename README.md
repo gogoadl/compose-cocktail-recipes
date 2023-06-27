@@ -15,8 +15,6 @@ The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 ![녹화_2023_06_27_17_22_21_409](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/8c11d9e0-0376-49f8-bd4b-d31b6bb7bcca)
 
 
-
-
 ## 📚 Tech stacks & libraries
 
 + MVVM Architecture
@@ -28,6 +26,17 @@ The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 + Coil
 + Timber
 + Github Action (CI/CD)
+
+## 🏛️ Architecture
+
+![KakaoTalk_Photo_2023-06-27-18-14-05](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/74fd293e-cdd7-48b2-b863-522c240b5e65)
+
+![KakaoTalk_Photo_2023-06-27-18-14-10](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/fddd2576-778c-41cb-9322-e77a3b92d32e)
+
+![KakaoTalk_Photo_2023-06-27-18-14-13](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/ac060e39-5754-4073-b881-e744ecb2f381)
+
+![KakaoTalk_Photo_2023-06-27-18-14-16](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/0aafef67-89cc-47c9-a5e3-e9b6a53ca03e)
+
 
 ## 💎 Download
 
