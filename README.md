@@ -12,9 +12,7 @@ I was inspired by developer [skydoves](https://github.com/skydoves)'s project [P
 
 The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 
-![video](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/1e9bd67b-e363-4c54-8280-af4d4f68c3d0)
-
-
+![video](https://github-production-user-asset-6210df.s3.amazonaws.com/49335446/249083149-1e9bd67b-e363-4c54-8280-af4d4f68c3d0.mp4)
 
 
 ## 📚 Tech stacks & libraries
