@@ -12,7 +12,11 @@ I was inspired by developer [skydoves](https://github.com/skydoves)'s project [P
 
 The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 
-![video](https://github-production-user-asset-6210df.s3.amazonaws.com/49335446/249083149-1e9bd67b-e363-4c54-8280-af4d4f68c3d0.mp4)
+![video](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/184a8348-fd68-4dca-adc5-01c52e35e50f)
+
+
+
+
 
 
 ## 📚 Tech stacks & libraries
