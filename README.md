@@ -35,8 +35,8 @@ The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 
 일반적인 아키텍처 원칙을 고려하여 각 애플리케이션에는 레이어가 두 개 이상 있어야 합니다.
 
-화면에 애플리케이션 데이터를 표시하는 UI 레이어
-앱의 비즈니스 로직을 포함하고 애플리케이션 데이터를 노출하는 데이터 레이어
++ 화면에 애플리케이션 데이터를 표시하는 UI 레이어
++ 앱의 비즈니스 로직을 포함하고 애플리케이션 데이터를 노출하는 데이터 레이어
 
 <img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/fddd2576-778c-41cb-9322-e77a3b92d32e" width="650" height="400">
 
@@ -68,7 +68,8 @@ UI 레이어는 다음 두 가지로 구성됩니다.
 
 ## CI / CD
 
-
++ Repository에서 push, pull request 이벤트 발생 시 Github Actions 에서 debug, release 빌드 수행 및 빌드 결과물을 artifacts에 업로드 합니다.
++ Repository에서 버전 태그 생성 시 업로드한 release 빌드 artifacts를 github releases에 업로드 합니다.
 
 
 
