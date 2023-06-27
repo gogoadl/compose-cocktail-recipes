@@ -116,7 +116,34 @@ fun CocktailDetails(
     var isLoading = true
     var currentRotation by remember { mutableFloatStateOf(0f) }
     val rotation = remember { Animatable(currentRotation) }
-    val parsedColor by remember { mutableStateOf<ParsedColor>(ParsedColor()) }
+    var parsedColor by remember { mutableStateOf<ParsedColor>(ParsedColor()) }
+    val context = LocalContext.current
+    var imageResult by remember {
+        mutableStateOf<RequestStatus>(RequestStatus.Loading)
+    }
+
+    LaunchedEffect(key1 = drink?.strDrinkThumb) {
+        imageResult = RequestStatus.Loading
+        val result = PaletteGenerator.convertImageUrlToBitmap(
+            drink?.strDrinkThumb?: "",
+            context
+        )
+        if (result is SuccessResult) {
+            Timber.d("result is success")
+            val bitmap = (result.drawable as BitmapDrawable).bitmap
+            if (bitmap != null) {
+                parsedColor = PaletteGenerator.extractColorsFromBitmapToParsedColors(bitmap = bitmap)
+            }
+            imageResult = RequestStatus.Success
+        }
+
+        if (result is ErrorResult) {
+            Timber.d("result is Error")
+            imageResult = RequestStatus.Error
+        }
+
+        Timber.d("parsed Colors : ${parsedColor.toString()}")
+    }
 
     LaunchedEffect(key1 = cocktailId) {
         viewModel.loadCocktailById(cocktailId)
@@ -124,7 +151,6 @@ fun CocktailDetails(
     BackHandler(onBack = pressOnBack)
     RotationEffect(isLoading, currentRotation, rotation)
     StatusBarColorChangeEffect(parsedColor)
-    PaletteColorExtractEffect(drink, parsedColor)
 
     if (drink == null) {
         LoadingBox(rotation)
@@ -277,48 +303,6 @@ fun LoadingBox(rotation: Animatable<Float, AnimationVector1D>) {
             )
         }
     }
-}
-@Composable
-fun PaletteColorExtractEffect(drink: Drink?, parsedColor: ParsedColor) {
-    val context = LocalContext.current
-    var imageResult by remember {
-        mutableStateOf<RequestStatus>(RequestStatus.Loading)
-    }
-    LaunchedEffect(key1 = drink?.strDrinkThumb) {
-
-        Timber.d("LaunchedEffect called. key : drink?.strDrinkThumb = ${drink?.strDrinkThumb}")
-        imageResult = RequestStatus.Loading
-        val result = PaletteGenerator.convertImageUrlToBitmap(
-            drink?.strDrinkThumb?: "",
-            context
-        )
-        if (result is SuccessResult) {
-            Timber.d("result is success")
-            val bitmap = (result.drawable as BitmapDrawable).bitmap
-            if (bitmap != null) {
-                val color = PaletteGenerator.extractColorsFromBitmapToParsedColors(bitmap = bitmap)
-                parsedColor.copy(
-                    lightMutedSwatch = color.lightMutedSwatch,
-                    lightMutedSwatchBody = color.lightMutedSwatchBody,
-                    lightVibrantSwatch = color.lightVibrantSwatch,
-                    lightVibrantSwatchBody = color.lightVibrantSwatchBody,
-                    mutedSwatch = color.mutedSwatch,
-                    mutedSwatchBody = color.mutedSwatchBody,
-                    vibrantSwatch = color.vibrantSwatch,
-                    vibrantSwatchBody = color.vibrantSwatchBody
-                )
-            }
-            imageResult = RequestStatus.Success
-        }
-
-        if (result is ErrorResult) {
-            Timber.d("result is Error")
-            imageResult = RequestStatus.Error
-        }
-
-        Timber.d("parsed Colors : ${parsedColor.toString()}")
-    }
-
 }
 
 @Composable
