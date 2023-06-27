@@ -97,8 +97,7 @@ fun ImageCard(
 fun SingleImageCard(
     imageUrl: String,
     contentDescription: String,
-    title: String,
-    modifier: Modifier = Modifier
+    title: String
 ) {
     Card(shape = RoundedCornerShape(15.dp), modifier = Modifier.fillMaxSize(0.8f)) {
         Box(contentAlignment = Alignment.Center) {
@@ -109,9 +108,6 @@ fun SingleImageCard(
                     .build())
             val state = painter.state
 
-            val transition by animateFloatAsState(
-                targetValue = if (state is AsyncImagePainter.State.Success) 1f else 0f
-            )
             if (state is AsyncImagePainter.State.Loading) {
                 LoadingAnimation()
             }

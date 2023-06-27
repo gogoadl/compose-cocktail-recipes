@@ -101,7 +101,6 @@ fun Main() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier,
     mainViewModel: MainViewModel = viewModel(),
 ) {
     val navController = rememberNavController()
@@ -156,8 +155,7 @@ fun MainScreen(
 fun Cards(
     cocktails: Cocktail,
     searchState: SearchState,
-    selectCocktail: (String) -> Unit,
-    context: Context = LocalContext.current.applicationContext
+    selectCocktail: (String) -> Unit
 ) {
     if (!cocktails.drinks.isNullOrEmpty()) {
         cocktails.drinks.let {
@@ -174,9 +172,7 @@ fun Cards(
                     SingleImageCard(
                         imageUrl = drink?.strDrinkThumb ?: "",
                         contentDescription = drink?.strDrink ?: "description",
-                        title = drink?.strDrink ?: "title",
-                        modifier = Modifier
-                            .fillMaxSize()
+                        title = drink?.strDrink ?: "title"
                     )
                 }
 
