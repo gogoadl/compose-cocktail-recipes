@@ -26,8 +26,19 @@ jobs:
       run: chmod +x gradlew
     - name: Build Debug APK
       run: ./gradlew assembleDebug
+    - name: Generate Keystore file from Github Secrets
+      run: |
+          echo "${{ secrets.APP_KEYSTORE_BASE64 }}" > ./keystore.b64
+          base64 -d -i ./keystore.b64 > ./${{ secrets.APP_KEY_FILE }}
+          cp ./${{ secrets.APP_KEY_FILE }} ./app/${{ secrets.APP_KEY_FILE }}
     - name: Build Release APK
-      run: ./gradlew assembleRelease
+      run: |
+          bash ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file=${{ secrets.APP_KEY_FILE }} \
+            -Pandroid.injected.signing.store.password=${{ secrets.APP_KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.APP_KEYSTORE_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.APP_KEY_PASSWORD }} \
+            --stacktrace
     - name: Upload Debug APK
       uses: actions/upload-artifact@v3
       with:
