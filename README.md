@@ -30,19 +30,19 @@ The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 ## 🏛️ Architecture
 
 <p align="center">
-<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/74fd293e-cdd7-48b2-b863-522c240b5e65" width="200" height="200">
+<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/74fd293e-cdd7-48b2-b863-522c240b5e65" width="700" height="400">
 </p>
 
 <p align="center">
-<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/fddd2576-778c-41cb-9322-e77a3b92d32e" width="200" height="200">
+<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/fddd2576-778c-41cb-9322-e77a3b92d32e" width="650" height="400">
 </p>
 
 <p align="center">
-<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/ac060e39-5754-4073-b881-e744ecb2f381" width="200" height="200">
+<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/ac060e39-5754-4073-b881-e744ecb2f381" width="700" height="350">
 </p>
 
 <p align="center">
-<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/0aafef67-89cc-47c9-a5e3-e9b6a53ca03e" width="200" height="200">
+<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/0aafef67-89cc-47c9-a5e3-e9b6a53ca03e" width="900" height="400">
 </p>
 
 ## 💎 Download
