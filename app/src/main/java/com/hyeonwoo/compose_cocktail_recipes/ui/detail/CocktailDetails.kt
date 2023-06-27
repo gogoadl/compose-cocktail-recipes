@@ -116,7 +116,6 @@ fun CocktailDetails(
     var isLoading = true
     var currentRotation by remember { mutableFloatStateOf(0f) }
     val rotation = remember { Animatable(currentRotation) }
-    val painter = rememberAsyncImagePainter(model = drink?.strDrinkThumb)
     val parsedColor by remember { mutableStateOf<ParsedColor>(ParsedColor()) }
 
     LaunchedEffect(key1 = cocktailId) {
@@ -126,7 +125,7 @@ fun CocktailDetails(
     RotationEffect(isLoading, currentRotation, rotation)
     StatusBarColorChangeEffect(parsedColor)
     PaletteColorExtractEffect(drink, parsedColor)
-    
+
     if (drink == null) {
         LoadingBox(rotation)
     } else {
@@ -158,17 +157,15 @@ fun CocktailDetailsScreen(
         )},
     ) {
         Box(modifier = Modifier.padding(it)) {
-            CocktailDetailsBody(viewModel, drink, parsedColor, pressOnBack)
+            CocktailDetailsBody(drink, parsedColor)
         }
     }
 }
 
 @Composable
 private fun CocktailDetailsBody(
-    viewModel: DetailViewModel,
     drink: Drink,
     parsedColor: ParsedColor,
-    pressOnBack: () -> Unit,
 ) {
 
     Column(
