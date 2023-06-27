@@ -29,14 +29,21 @@ The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 
 ## 🏛️ Architecture
 
-![KakaoTalk_Photo_2023-06-27-18-14-05](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/74fd293e-cdd7-48b2-b863-522c240b5e65)
+<p align="center">
+<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/74fd293e-cdd7-48b2-b863-522c240b5e65" width="200" height="200">
+</p>
 
-![KakaoTalk_Photo_2023-06-27-18-14-10](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/fddd2576-778c-41cb-9322-e77a3b92d32e)
+<p align="center">
+<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/fddd2576-778c-41cb-9322-e77a3b92d32e" width="200" height="200">
+</p>
 
-![KakaoTalk_Photo_2023-06-27-18-14-13](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/ac060e39-5754-4073-b881-e744ecb2f381)
+<p align="center">
+<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/ac060e39-5754-4073-b881-e744ecb2f381" width="200" height="200">
+</p>
 
-![KakaoTalk_Photo_2023-06-27-18-14-16](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/0aafef67-89cc-47c9-a5e3-e9b6a53ca03e)
-
+<p align="center">
+<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/0aafef67-89cc-47c9-a5e3-e9b6a53ca03e" width="200" height="200">
+</p>
 
 ## 💎 Download
 
