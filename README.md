@@ -30,4 +30,4 @@ The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 
 ## 💎 Download
 
-you can download this app on [release](https://github.com/gogoadl/compose-cocktail-recipes/releases)
+you can download this app on [Releases](https://github.com/gogoadl/compose-cocktail-recipes/releases)
