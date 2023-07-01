@@ -64,6 +64,7 @@ jobs:
         uses: gogoadl/github-action-release-apk@v1.0.0-alpha04
         with:
           asset-name: 'Cocktails.apk'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           base64-keystore: ${{ secrets.APP_KEYSTORE_BASE64 }}
           key-file: ${{ secrets.APP_KEY_FILE }}
           keystore-password: ${{ secrets.APP_KEYSTORE_PASSWORD }}
