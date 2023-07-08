@@ -2,7 +2,6 @@ package com.hyeonwoo.compose_cocktail_recipes.ui
 
 import androidx.lifecycle.ViewModel
 import com.hyeonwoo.compose_cocktail_recipes.network.repository.CocktailRepository
-import com.hyeonwoo.compose_cocktail_recipes.ui.state.SearchState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
