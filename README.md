@@ -12,7 +12,8 @@ I was inspired by developer [skydoves](https://github.com/skydoves)'s project [P
 
 The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 
-![녹화_2023_06_27_17_22_21_409](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/8c11d9e0-0376-49f8-bd4b-d31b6bb7bcca)
+![녹화_2023_07_10_20_33_00_634](https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/59666fda-c0f2-42f9-93e3-d9c97945d3d7)
+
 
 
 ## 📚 Tech stacks & libraries
