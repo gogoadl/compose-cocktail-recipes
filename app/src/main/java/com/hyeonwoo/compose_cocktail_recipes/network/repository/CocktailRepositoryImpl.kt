@@ -21,10 +21,10 @@ class CocktailRepositoryImpl @Inject constructor(
     override fun getCocktailById(id: String): Flow<Cocktail> = flow {
         val cocktail = cocktailService.getCocktail(id)
         emit(cocktail)
-    }
+    }.flowOn(ioDispatcher)
 
     override fun getRandomCocktail(): Flow<Cocktail> = flow {
         val cocktail = cocktailService.getRandomCocktail()
         emit(cocktail)
-    }
+    }.flowOn(ioDispatcher)
 }
