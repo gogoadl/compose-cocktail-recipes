@@ -31,6 +31,8 @@ The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 
 ## CI / CD
 
+<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/0aafef67-89cc-47c9-a5e3-e9b6a53ca03e" width="650" height="400">
+
 + Repository에서 push, pull request 이벤트 발생 시 Github Actions 에서 debug, release 빌드 수행 및 빌드 결과물을 artifacts에 업로드 합니다.
 + Repository에서 버전 태그 생성 시 업로드한 release 빌드 artifacts를 github releases에 업로드 합니다.
 
