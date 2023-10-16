@@ -28,10 +28,6 @@ The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 + Timber
 + Github Action (CI/CD)
 
-## 🏛️ Architecture
-
-<img src="https://github.com/gogoadl/compose-cocktail-recipes/assets/49335446/74fd293e-cdd7-48b2-b863-522c240b5e65" width="650" height="400">
-
 
 ## CI / CD
 
