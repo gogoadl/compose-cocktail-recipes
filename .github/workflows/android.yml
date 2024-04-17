@@ -42,7 +42,10 @@ jobs:
           gradlePath: app/build.gradle # or app/build.gradle.kts
           versionCode: ${{github.run_number}}
           versionName: ${{env.RELEASE_VERSION}}
-
+          
+      - name: Run Detekt
+        run: ./gradlew detekt
+        
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
