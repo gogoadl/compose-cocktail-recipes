@@ -26,7 +26,7 @@ The project's database used [ThecocktailDB](https://www.thecocktaildb.com/)
 + Gson
 + Coil
 + Timber
-+ Github Action (CI/CD)
++ GitHub Actions (CI/CD)
 
 
 ## CI / CD
