@@ -69,7 +69,7 @@ fun DummyDrink(): Drink {
         strIBA = "unforgettables",
         strAlcoholic = "Alcoholic",
         strGlass = "Cocktail glass",
-        strInstructions = "traight: Pour all ingredients into mixing glass with ice cubes. Stir well. Strain in chilled martini cocktail glass. Squeeze oil from lemon peel onto the drink, or garnish with olive.",
+        strInstructions = "Straight: Pour all ingredients into mixing glass with ice cubes. Stir well. Strain in chilled martini cocktail glass. Squeeze oil from lemon peel onto the drink, or garnish with olive.",
         strInstructionsES = null,
         strInstructionsDE = null,
         strInstructionsFR = null,
